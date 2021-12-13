@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+    nodeapp:
+        container_name: test_concept_1
+        # image: node
+        # scale: 2
+        restart: always
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "5000:3000"
+        links:
+            - mongo
+        depends_on:
+            - mongo
+            - mongo-express
+        networks:
+          - node-webapp-network
+        volumes:
+            - .:/usr/src/app
+        
+    mongo:
+        container_name: test_concept_1_mongo
+        image: mongo:4.4.6
+        restart: always
+        # environment:
+        #     MONGO_INITDB_ROOT_USERNAME: admin
+        #     MONGO_INITDB_ROOT_PASSWORD: admin
+        #     MONGO_INITDB_DATABASE: admin
+        volumes:
+            - ./mongo:/data/db
+            - ./mongo/auth/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+        # volumes:
+        #     # - ~/mongo:/data/db
+        #     - ./mongo:/data/db
+        # ports:
+        #     - "27018:27017"
+        expose:
+            - '27017'
+        logging:
+            driver: none
+        networks:
+            - node-webapp-network  
+
+networks:
+    node-webapp-network:
+        driver: bridge

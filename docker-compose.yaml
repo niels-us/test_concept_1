@@ -68,8 +68,6 @@ services:
     #     - "27018:27017"
     expose:
       - '27017'
-    logging:
-      driver: none
     networks:
       - node-webapp-network
 
